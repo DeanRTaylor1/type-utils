@@ -1,6 +1,17 @@
 package utils
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
+
+var DEBUG = true
+
+func Debug(format string, args ...interface{}) {
+	if DEBUG {
+		fmt.Printf(format, args...)
+	}
+}
 
 func CapitalizeFirstLetter(s string) string {
 	if len(s) == 0 {

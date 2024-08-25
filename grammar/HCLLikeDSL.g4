@@ -20,7 +20,7 @@ attribute:
 	IDENTIFIER ('=' value)
 	| 'repeated' IDENTIFIER '=' value
 	| 'optional' IDENTIFIER '=' value
-	| 'optional repeated' '=' value;
+	| 'optional repeated' IDENTIFIER '=' value;
 
 value: STRING | NUMBER | BOOLEAN | IDENTIFIER;
 

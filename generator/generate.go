@@ -32,7 +32,7 @@ func clearDirectory(dir string) error {
 }
 
 func Generate(outputLang string, config *listener.Config, schema map[string]*listener.SchemaType) error {
-	outputDir := fmt.Sprintf("%s/%s", config.OutputDir, config.PackageName)
+	outputDir := fmt.Sprintf("%s/%s", config.GoOutputDir, config.PackageName)
 	err := os.MkdirAll(outputDir, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to create output directory: %v", err)

@@ -44,12 +44,6 @@ func (s *BaseHCLLikeDSLListener) EnterBlock(ctx *BlockContext) {}
 // ExitBlock is called when production block is exited.
 func (s *BaseHCLLikeDSLListener) ExitBlock(ctx *BlockContext) {}
 
-// EnterNestedBlock is called when production nestedBlock is entered.
-func (s *BaseHCLLikeDSLListener) EnterNestedBlock(ctx *NestedBlockContext) {}
-
-// ExitNestedBlock is called when production nestedBlock is exited.
-func (s *BaseHCLLikeDSLListener) ExitNestedBlock(ctx *NestedBlockContext) {}
-
 // EnterBlockBody is called when production blockBody is entered.
 func (s *BaseHCLLikeDSLListener) EnterBlockBody(ctx *BlockBodyContext) {}
 

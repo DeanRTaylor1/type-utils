@@ -19,9 +19,6 @@ type HCLLikeDSLListener interface {
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
 
-	// EnterNestedBlock is called when entering the nestedBlock production.
-	EnterNestedBlock(c *NestedBlockContext)
-
 	// EnterBlockBody is called when entering the blockBody production.
 	EnterBlockBody(c *BlockBodyContext)
 
@@ -42,9 +39,6 @@ type HCLLikeDSLListener interface {
 
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
-
-	// ExitNestedBlock is called when exiting the nestedBlock production.
-	ExitNestedBlock(c *NestedBlockContext)
 
 	// ExitBlockBody is called when exiting the blockBody production.
 	ExitBlockBody(c *BlockBodyContext)

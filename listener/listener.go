@@ -24,9 +24,65 @@ type SchemaType struct {
 }
 
 type Config struct {
-	OutputDir   string
 	PackageName string
 	FileName    string
+
+	// Language-specific output directories
+	GoOutputDir         string
+	TypeScriptOutputDir string
+	JavaOutputDir       string
+	PythonOutputDir     string
+	CsharpOutputDir     string
+	RustOutputDir       string
+	KotlinOutputDir     string
+	SwiftOutputDir      string
+	RubyOutputDir       string
+	PhpOutputDir        string
+	ScalaOutputDir      string
+	DartOutputDir       string
+
+	// Go-specific options
+	GoModuleName   string
+	GoGenerateTags []string // e.g., json, xml, yaml
+	GoUsePointers  bool
+
+	// TypeScript-specific options
+	TsNamespace    string
+	TsModuleSystem string // e.g., "CommonJS", "ES6"
+	TsStrictMode   bool
+
+	// Java-specific options
+	JavaPackage     string
+	JavaClassSuffix string // e.g., "DTO", "Model"
+	JavaGenerateJPA bool
+
+	// Python-specific options
+	PythonPackageName      string
+	PythonUseDataclasses   bool
+	PythonGeneratePydantic bool
+
+	// C#-specific options
+	CsharpNamespace   string
+	CsharpClassSuffix string
+	CsharpNullable    bool
+
+	// Rust-specific options
+	RustModuleName   string
+	RustDeriveTraits []string // e.g., Debug, Clone, Serialize
+
+	// Kotlin-specific options
+	KotlinPackage        string
+	KotlinUseDataClasses bool
+
+	// Swift-specific options
+	SwiftModuleName      string
+	SwiftGenerateCodable bool
+
+	// Common options
+	GenerateComments      bool
+	GenerateValidation    bool
+	GenerateToString      bool
+	GenerateDocumentation bool
 }
 
 type SchemaListener struct {
@@ -69,17 +125,116 @@ func (l *SchemaListener) EnterConfigAttribute(ctx *parser.ConfigAttributeContext
 		key := ctx.IDENTIFIER().GetSymbol().GetText()
 		value := ctx.STRING().GetSymbol().GetText()
 		value = value[1 : len(value)-1] // Remove quotes
+
 		l.currentType.Fields[key] = FieldType{Type: value, IsArray: false, IsCustom: false}
 
 		switch key {
-		case "output_dir":
-			l.Config.OutputDir = value
+		// General options
 		case "package_name":
 			l.Config.PackageName = value
 		case "file_name":
 			l.Config.FileName = value
+
+		// Language-specific output directories
+		case "go_output_dir":
+			l.Config.GoOutputDir = value
+		case "typescript_output_dir":
+			l.Config.TypeScriptOutputDir = value
+		case "java_output_dir":
+			l.Config.JavaOutputDir = value
+		case "python_output_dir":
+			l.Config.PythonOutputDir = value
+		case "csharp_output_dir":
+			l.Config.CsharpOutputDir = value
+		case "rust_output_dir":
+			l.Config.RustOutputDir = value
+		case "kotlin_output_dir":
+			l.Config.KotlinOutputDir = value
+		case "swift_output_dir":
+			l.Config.SwiftOutputDir = value
+		case "ruby_output_dir":
+			l.Config.RubyOutputDir = value
+		case "php_output_dir":
+			l.Config.PhpOutputDir = value
+		case "scala_output_dir":
+			l.Config.ScalaOutputDir = value
+		case "dart_output_dir":
+			l.Config.DartOutputDir = value
+
+		// Go-specific options
+		case "go_module_name":
+			l.Config.GoModuleName = value
+		case "go_generate_tags":
+			l.Config.GoGenerateTags = strings.Split(value, ",")
+		case "go_use_pointers":
+			l.Config.GoUsePointers = parseBool(value)
+
+		// TypeScript-specific options
+		case "ts_namespace":
+			l.Config.TsNamespace = value
+		case "ts_module_system":
+			l.Config.TsModuleSystem = value
+		case "ts_strict_mode":
+			l.Config.TsStrictMode = parseBool(value)
+
+		// Java-specific options
+		case "java_package":
+			l.Config.JavaPackage = value
+		case "java_class_suffix":
+			l.Config.JavaClassSuffix = value
+		case "java_generate_jpa":
+			l.Config.JavaGenerateJPA = parseBool(value)
+
+		// Python-specific options
+		case "python_package_name":
+			l.Config.PythonPackageName = value
+		case "python_use_dataclasses":
+			l.Config.PythonUseDataclasses = parseBool(value)
+		case "python_generate_pydantic":
+			l.Config.PythonGeneratePydantic = parseBool(value)
+
+		// C#-specific options
+		case "csharp_namespace":
+			l.Config.CsharpNamespace = value
+		case "csharp_class_suffix":
+			l.Config.CsharpClassSuffix = value
+		case "csharp_nullable":
+			l.Config.CsharpNullable = parseBool(value)
+
+		// Rust-specific options
+		case "rust_module_name":
+			l.Config.RustModuleName = value
+		case "rust_derive_traits":
+			l.Config.RustDeriveTraits = strings.Split(value, ",")
+
+		// Kotlin-specific options
+		case "kotlin_package":
+			l.Config.KotlinPackage = value
+		case "kotlin_use_data_classes":
+			l.Config.KotlinUseDataClasses = parseBool(value)
+
+		// Swift-specific options
+		case "swift_module_name":
+			l.Config.SwiftModuleName = value
+		case "swift_generate_codable":
+			l.Config.SwiftGenerateCodable = parseBool(value)
+
+		// Common options
+		case "generate_comments":
+			l.Config.GenerateComments = parseBool(value)
+		case "generate_validation":
+			l.Config.GenerateValidation = parseBool(value)
+		case "generate_to_string":
+			l.Config.GenerateToString = parseBool(value)
+		case "generate_documentation":
+			l.Config.GenerateDocumentation = parseBool(value)
 		}
 	}
+}
+
+// Helper function to parse boolean values
+func parseBool(value string) bool {
+	return strings.ToLower(value) == "true" || value == "1"
 }
 
 func (l *SchemaListener) EnterBlock(ctx *parser.BlockContext) {
@@ -123,6 +278,7 @@ func (l *SchemaListener) EnterBlock(ctx *parser.BlockContext) {
 	blockBody := ctx.BlockBody()
 	if blockBody != nil {
 		fmt.Printf("Processing block body for %s\n", typeName)
+
 		for i, child := range blockBody.GetChildren() {
 			fmt.Printf("Child %d: ", i)
 			switch childCtx := child.(type) {
@@ -191,11 +347,14 @@ func (l *SchemaListener) processAttribute(ctx *parser.AttributeContext) {
 func (l *SchemaListener) EnterAttribute(ctx *parser.AttributeContext) {
 	if l.currentType != nil {
 		fieldName := ctx.IDENTIFIER().GetSymbol().GetText()
-		l.isRepeated = ctx.GetChild(0).GetPayload().(antlr.Token).GetText() == "repeated"
-		l.isOptional = ctx.GetChild(0).GetPayload().(antlr.Token).GetText() == "optional"
+		fmt.Printf("getetxt %s\n", ctx.GetChild(0).GetPayload().(antlr.Token).GetText())
+
 		if ctx.GetChild(0).GetPayload().(antlr.Token).GetText() == "optional repeated" {
 			l.isRepeated = true
 			l.isOptional = true
+		} else {
+			l.isRepeated = ctx.GetChild(0).GetPayload().(antlr.Token).GetText() == "repeated"
+			l.isOptional = ctx.GetChild(0).GetPayload().(antlr.Token).GetText() == "optional"
 		}
 
 		fmt.Printf("value: %v\n", ctx.Value())

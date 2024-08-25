@@ -1,5 +1,5 @@
 HCLCONFIG {
-    output_dir = "./generated"
+    go_output_dir = "./generated"
     package_name = "models"
     file_name = "main"
 }
@@ -8,12 +8,12 @@ User {
     authentication {
         id = "string"
         mfa_enabled = "boolean"
-        provider {
+        repeated provider {
             name = "string"
             url = "string"
         }
     }
-    UserProfile {
+    optional UserProfile {
         email = "string"
         first_name = "string"
         last_name = "string"

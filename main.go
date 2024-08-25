@@ -13,15 +13,8 @@ import (
 	"github.com/deanrtaylor1/type-utils/generator"
 	"github.com/deanrtaylor1/type-utils/listener"
 	"github.com/deanrtaylor1/type-utils/parser"
+	"github.com/deanrtaylor1/type-utils/utils"
 )
-
-var DEBUG = true
-
-func debug(format string, args ...interface{}) {
-	if DEBUG {
-		fmt.Printf(format, args...)
-	}
-}
 
 func main() {
 	// Read the configuration file
@@ -39,7 +32,7 @@ func main() {
 		log.Fatalf("Language not specified in config")
 	}
 
-	debug("Config loaded - Version: %s, Language: %s\n", config.Version, config.Language)
+	utils.Debug("Config loaded - Version: %s, Language: %s\n", config.Version, config.Language)
 
 	var schemasDirName string
 	if config.SchemasDirName == "" {
@@ -51,9 +44,9 @@ func main() {
 		if err != nil {
 			return err
 		}
-		debug("filename: %s", info.Name())
+		utils.Debug("filename: %s", info.Name())
 		if !info.IsDir() && strings.HasSuffix(info.Name(), ".hcl") {
-			fmt.Printf("Processing file: %s\n", path)
+			utils.Debug("Processing file: %s\n", path)
 			err := processHCLFile(path, config.Language)
 			if err != nil {
 				return fmt.Errorf("error processing file %s: %v", path, err)
@@ -80,20 +73,24 @@ func processHCLFile(filePath string, language string) error {
 	listener := listener.NewSchemaListener()
 	antlr.ParseTreeWalkerDefault.Walk(listener, p.File())
 
-	fmt.Printf("\nProcessing: %s\n", filePath)
-	fmt.Println("HCLCONFIG:")
-	if hclconfig, ok := listener.Schema["HCLCONFIG"]; ok {
-		for key, value := range hclconfig.Fields {
-			fmt.Printf("  %s = %s\n", key, value.Type)
+	utils.Debug("\nProcessing: %s\n", filePath)
+	utils.Debug("HCLCONFIG:")
+	if utils.DEBUG {
+		if hclconfig, ok := listener.Schema["HCLCONFIG"]; ok {
+			for key, value := range hclconfig.Fields {
+				fmt.Printf("  %s = %s\n", key, value.Type)
+			}
 		}
+		fmt.Println()
 	}
-	fmt.Println()
 
-	for typeName, schemaType := range listener.Schema {
-		if typeName != "HCLCONFIG" {
-			fmt.Printf("Type: %s\n", typeName)
-			printFields(schemaType.Fields, 1)
-			fmt.Println()
+	if utils.DEBUG {
+		for typeName, schemaType := range listener.Schema {
+			if typeName != "HCLCONFIG" {
+				fmt.Printf("Type: %s\n", typeName)
+				printFields(schemaType.Fields, 1)
+				fmt.Println()
+			}
 		}
 	}
 
@@ -102,8 +99,8 @@ func processHCLFile(filePath string, language string) error {
 		return fmt.Errorf("error creating types: %v", err)
 	}
 
-	fmt.Printf("Config: %+v\n", listener.Config)
-	fmt.Println("------------------------------------")
+	utils.Debug("Config: %+v\n", listener.Config)
+	utils.Debug("------------------------------------")
 
 	return nil
 }
