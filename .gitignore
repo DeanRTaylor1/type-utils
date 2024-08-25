@@ -1,0 +1,28 @@
+# Go-related files
+bin/
+pkg/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go dependency management
+vendor/
+
+# ANTLR-related files
+*.tokens
+*.interp
+*.java
+*.class
+*.jar
+
+# General files
+.DS_Store
+*.log
+*.tmp
+*.swp
+
+generated/

@@ -16,11 +16,11 @@ type HCLLikeDSLListener interface {
 	// EnterConfigAttribute is called when entering the configAttribute production.
 	EnterConfigAttribute(c *ConfigAttributeContext)
 
-	// EnterImportStatement is called when entering the importStatement production.
-	EnterImportStatement(c *ImportStatementContext)
-
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
+
+	// EnterNestedBlock is called when entering the nestedBlock production.
+	EnterNestedBlock(c *NestedBlockContext)
 
 	// EnterBlockBody is called when entering the blockBody production.
 	EnterBlockBody(c *BlockBodyContext)
@@ -31,9 +31,6 @@ type HCLLikeDSLListener interface {
 	// EnterValue is called when entering the value production.
 	EnterValue(c *ValueContext)
 
-	// EnterArray is called when entering the array production.
-	EnterArray(c *ArrayContext)
-
 	// ExitFile is called when exiting the file production.
 	ExitFile(c *FileContext)
 
@@ -43,11 +40,11 @@ type HCLLikeDSLListener interface {
 	// ExitConfigAttribute is called when exiting the configAttribute production.
 	ExitConfigAttribute(c *ConfigAttributeContext)
 
-	// ExitImportStatement is called when exiting the importStatement production.
-	ExitImportStatement(c *ImportStatementContext)
-
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
+
+	// ExitNestedBlock is called when exiting the nestedBlock production.
+	ExitNestedBlock(c *NestedBlockContext)
 
 	// ExitBlockBody is called when exiting the blockBody production.
 	ExitBlockBody(c *BlockBodyContext)
@@ -57,7 +54,4 @@ type HCLLikeDSLListener interface {
 
 	// ExitValue is called when exiting the value production.
 	ExitValue(c *ValueContext)
-
-	// ExitArray is called when exiting the array production.
-	ExitArray(c *ArrayContext)
 }

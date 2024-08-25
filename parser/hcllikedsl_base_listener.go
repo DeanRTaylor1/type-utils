@@ -38,17 +38,17 @@ func (s *BaseHCLLikeDSLListener) EnterConfigAttribute(ctx *ConfigAttributeContex
 // ExitConfigAttribute is called when production configAttribute is exited.
 func (s *BaseHCLLikeDSLListener) ExitConfigAttribute(ctx *ConfigAttributeContext) {}
 
-// EnterImportStatement is called when production importStatement is entered.
-func (s *BaseHCLLikeDSLListener) EnterImportStatement(ctx *ImportStatementContext) {}
-
-// ExitImportStatement is called when production importStatement is exited.
-func (s *BaseHCLLikeDSLListener) ExitImportStatement(ctx *ImportStatementContext) {}
-
 // EnterBlock is called when production block is entered.
 func (s *BaseHCLLikeDSLListener) EnterBlock(ctx *BlockContext) {}
 
 // ExitBlock is called when production block is exited.
 func (s *BaseHCLLikeDSLListener) ExitBlock(ctx *BlockContext) {}
+
+// EnterNestedBlock is called when production nestedBlock is entered.
+func (s *BaseHCLLikeDSLListener) EnterNestedBlock(ctx *NestedBlockContext) {}
+
+// ExitNestedBlock is called when production nestedBlock is exited.
+func (s *BaseHCLLikeDSLListener) ExitNestedBlock(ctx *NestedBlockContext) {}
 
 // EnterBlockBody is called when production blockBody is entered.
 func (s *BaseHCLLikeDSLListener) EnterBlockBody(ctx *BlockBodyContext) {}
@@ -67,9 +67,3 @@ func (s *BaseHCLLikeDSLListener) EnterValue(ctx *ValueContext) {}
 
 // ExitValue is called when production value is exited.
 func (s *BaseHCLLikeDSLListener) ExitValue(ctx *ValueContext) {}
-
-// EnterArray is called when production array is entered.
-func (s *BaseHCLLikeDSLListener) EnterArray(ctx *ArrayContext) {}
-
-// ExitArray is called when production array is exited.
-func (s *BaseHCLLikeDSLListener) ExitArray(ctx *ArrayContext) {}
