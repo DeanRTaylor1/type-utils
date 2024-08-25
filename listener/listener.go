@@ -32,6 +32,7 @@ type Config struct {
 	// Language-specific output directories
 	GoOutputDir         string
 	TypeScriptOutputDir string
+	JavascriptOutputDir string
 	JavaOutputDir       string
 	PythonOutputDir     string
 	CsharpOutputDir     string
@@ -140,6 +141,8 @@ func (l *SchemaListener) EnterConfigAttribute(ctx *parser.ConfigAttributeContext
 		// Language-specific output directories
 		case "go_output_dir":
 			l.Config.GoOutputDir = value
+		case "javascript_output_dir":
+			l.Config.JavascriptOutputDir = value
 		case "typescript_output_dir":
 			l.Config.TypeScriptOutputDir = value
 		case "java_output_dir":

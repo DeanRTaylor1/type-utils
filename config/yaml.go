@@ -30,13 +30,11 @@ type YamlConfiger struct {
 }
 
 func NewYamlConfiger(filename string) *YamlConfiger {
-	fmt.Printf("filename: %s\n", filename)
 	return &YamlConfiger{filename: filename}
 }
 
 func (yc *YamlConfiger) Validate() error {
 	version := yc.GetConfig().GetVersion()
-	fmt.Printf("version: %s\n", version)
 	if !slices.Contains(getSupportedVersions(), version) {
 		return fmt.Errorf("unsupported version in config: %s", version)
 	}
@@ -62,7 +60,6 @@ func (yc *YamlConfiger) Read() Configer {
 	}
 
 	filename := filepath.Join(cwd, yc.GetFilename())
-	fmt.Printf("Attempting to read config file: %s\n", filename)
 
 	info, err := os.Stat(filename)
 	if err != nil {
@@ -76,8 +73,6 @@ func (yc *YamlConfiger) Read() Configer {
 		log.Fatalf("Expected file, but found directory: %s", filename)
 	}
 
-	fmt.Printf("Found config file: %s\n", info.Name())
-
 	buf, err := os.ReadFile(filename)
 	if err != nil {
 		log.Fatalf("Failed to read file: %v", err)
@@ -89,7 +84,6 @@ func (yc *YamlConfiger) Read() Configer {
 		log.Fatalf("Failed to parse YAML: %v", err)
 	}
 
-	fmt.Printf("Parsed config: %+v\n", config)
 	yc.config = config
 	return yc
 }

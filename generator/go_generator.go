@@ -66,6 +66,10 @@ func (g *GoSchemaGenerator) ConvertType(fieldType string) string {
 		return "int32"
 	case "number":
 		return "float64"
+	case "float":
+		return "float64"
+	case "time":
+		return "time.Time"
 	case "boolean":
 		return "bool"
 	default:

@@ -67,6 +67,10 @@ func (t *TypeScriptSchemaGenerator) ConvertType(fieldType string) string {
 		return "number"
 	case "number":
 		return "number"
+	case "time":
+		return "Date"
+	case "float":
+		return "number"
 	case "boolean":
 		return "boolean"
 	default:

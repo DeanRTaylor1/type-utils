@@ -37,10 +37,13 @@ func getOutputDir(config *listener.Config, outputLang string) string {
 		if config.GoOutputDir != "" {
 			return config.GoOutputDir
 		}
-	case "typescript":
+	case "typescript", "ts":
 		if config.TypeScriptOutputDir != "" {
-			fmt.Println("typescript output dir: ", config.TypeScriptOutputDir)
 			return config.TypeScriptOutputDir
+		}
+	case "javascript", "js":
+		if config.JavascriptOutputDir != "" {
+			return config.JavascriptOutputDir
 		}
 	default:
 		panic("unsupported output language")
@@ -52,8 +55,10 @@ func getFileType(outputLang string) string {
 	switch strings.ToLower(outputLang) {
 	case "go":
 		return "go"
-	case "typescript":
+	case "typescript", "ts":
 		return "ts"
+	case "javascript", "js":
+		return "js"
 	default:
 		panic("unsupported output language")
 	}
@@ -131,14 +136,14 @@ func gen(sg SchemaGenerator) error {
 
 func getGenerator(outputLang string, config *listener.Config, file *os.File, schema map[string]*listener.SchemaType) (SchemaGenerator, error) {
 	switch strings.ToLower(outputLang) {
-	case "typescript":
+	case "typescript", "ts":
 		return &TypeScriptSchemaGenerator{
 			file:   file,
 			config: config,
 			schema: schema,
 		}, nil
-	case "ts":
-		return &TypeScriptSchemaGenerator{
+	case "js", "javascript":
+		return &JavaScriptSchemaGenerator{
 			file:   file,
 			config: config,
 			schema: schema,
