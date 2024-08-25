@@ -2,33 +2,32 @@ package config
 
 import (
 	"fmt"
-	"os"
 
-	"gopkg.in/yaml.v2"
+	"github.com/deanrtaylor1/type-utils/constants"
 )
-
-type GitRepo struct {
-	URL  string `yaml:"url"`
-	Path string `yaml:"path"`
-}
 
 type Config struct {
 	Version        string   `yaml:"version"`
 	Language       string   `yaml:"language"`
-	SchemasDirName string   `yaml:"schemasDirName,omitempty"`
+	SchemasDirName string   `yaml:"schemas_dir_name,omitempty"`
 	GitRepo        *GitRepo `yaml:"git_repo,omitempty"`
 }
 
-// Read reads and parses the type-utils.yaml file
-func Read(filename string) (*Config, error) {
-	buf, err := os.ReadFile(filename)
-	if err != nil {
-		return nil, err
+func (c *Config) GetVersion() string {
+	return c.Version
+}
+
+func (c *Config) GetLanguage() string {
+	return c.Language
+}
+
+func (c *Config) GetSchemasDirName() string {
+	if c.SchemasDirName != "" {
+		return fmt.Sprintf("./%s", c.SchemasDirName)
 	}
-	config := &Config{}
-	err = yaml.Unmarshal(buf, config)
-	if err != nil {
-		return nil, fmt.Errorf("in file %q: %v", filename, err)
-	}
-	return config, nil
+	return fmt.Sprintf("./%s", constants.DEFAULT_SCHEMA_DIR_NAME)
+}
+
+func (c *Config) GetGitRepo() GitRepoConfiger {
+	return c.GitRepo
 }

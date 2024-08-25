@@ -398,3 +398,24 @@ func (l *SchemaListener) processValue(ctx parser.IValueContext, isRepeated, isOp
 	}
 	return FieldType{Type: "interface{}", IsArray: isRepeated, IsCustom: false, IsOptional: isOptional}
 }
+
+func PrintFields(fields map[string]FieldType, indent int) {
+	for fieldName, fieldType := range fields {
+		arrayStr := ""
+		optionalStr := ""
+		if fieldType.IsArray {
+			arrayStr = "[]"
+		}
+		if fieldType.IsOptional {
+			optionalStr = "?"
+		}
+		customStr := ""
+		if fieldType.IsCustom {
+			customStr = " (custom type)"
+		}
+		fmt.Printf("%s%s%s: %s%s%s\n", strings.Repeat("  ", indent), fieldName, optionalStr, arrayStr, fieldType.Type, customStr)
+		if len(fieldType.Fields) > 0 {
+			PrintFields(fieldType.Fields, indent+1)
+		}
+	}
+}
