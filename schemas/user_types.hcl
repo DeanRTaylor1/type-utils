@@ -1,5 +1,6 @@
 HCLCONFIG {
     go_output_dir = "./generated"
+    typescript_output_dir = "./types"
     package_name = "users"
     file_name = "user_types"
 }

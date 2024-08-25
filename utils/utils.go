@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var DEBUG = true
+var DEBUG = false
 
 func Debug(format string, args ...interface{}) {
 	if DEBUG {

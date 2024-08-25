@@ -31,8 +31,35 @@ func clearDirectory(dir string) error {
 	return nil
 }
 
+func getOutputDir(config *listener.Config, outputLang string) string {
+	switch strings.ToLower(outputLang) {
+	case "go":
+		if config.GoOutputDir != "" {
+			return config.GoOutputDir
+		}
+	case "typescript":
+		if config.TypeScriptOutputDir != "" {
+			return config.TypeScriptOutputDir
+		}
+	default:
+		panic("unsupported output language")
+	}
+	return "unsupported"
+}
+
+func getFileType(outputLang string) string {
+	switch strings.ToLower(outputLang) {
+	case "go":
+		return "go"
+	case "typescript":
+		return "ts"
+	default:
+		panic("unsupported output language")
+	}
+}
+
 func Generate(outputLang string, config *listener.Config, schema map[string]*listener.SchemaType) error {
-	outputDir := fmt.Sprintf("%s/%s", config.GoOutputDir, config.PackageName)
+	outputDir := fmt.Sprintf("%s/%s", getOutputDir(config, outputLang), config.PackageName)
 	err := os.MkdirAll(outputDir, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to create output directory: %v", err)
@@ -40,7 +67,7 @@ func Generate(outputLang string, config *listener.Config, schema map[string]*lis
 
 	clearDirectory(outputDir)
 
-	filename := filepath.Join(outputDir, config.PackageName+".go")
+	filename := filepath.Join(outputDir, config.PackageName+fmt.Sprintf(".%s", getFileType(outputLang)))
 
 	// Open file in write mode, create if not exists, truncate if exists
 	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
@@ -66,6 +93,7 @@ type SchemaGenerator interface {
 	GetFile() *os.File
 	GetConfig() *listener.Config
 	GetSchema() map[string]*listener.SchemaType
+	Final() (string, error)
 }
 
 func gen(sg SchemaGenerator) error {
@@ -91,11 +119,28 @@ func gen(sg SchemaGenerator) error {
 			return fmt.Errorf("failed to write type definition for %s: %v", typeName, err)
 		}
 	}
+	final, err := sg.Final()
+	if err != nil {
+		return err
+	}
+	fmt.Fprintln(sg.GetFile(), final)
 	return nil
 }
 
 func getGenerator(outputLang string, config *listener.Config, file *os.File, schema map[string]*listener.SchemaType) (SchemaGenerator, error) {
 	switch strings.ToLower(outputLang) {
+	case "typescript":
+		return &TypeScriptSchemaGenerator{
+			file:   file,
+			config: config,
+			schema: schema,
+		}, nil
+	case "ts":
+		return &TypeScriptSchemaGenerator{
+			file:   file,
+			config: config,
+			schema: schema,
+		}, nil
 	case "go":
 		return &GoSchemaGenerator{
 			file:   file,
@@ -105,11 +150,4 @@ func getGenerator(outputLang string, config *listener.Config, file *os.File, sch
 	default:
 		return nil, fmt.Errorf("no generator for output language: %s", outputLang)
 	}
-}
-
-func CapitalizeFirstLetter(s string) string {
-	if len(s) == 0 {
-		return s
-	}
-	return strings.ToUpper(s[:1]) + s[1:]
 }

@@ -246,8 +246,6 @@ func (l *SchemaListener) EnterBlock(ctx *parser.BlockContext) {
 		Fields: make(map[string]FieldType),
 		indent: 1,
 	}
-	fmt.Printf("Processing block %s\n", typeName)
-	fmt.Printf("ctx get text %s\n", ctx.GetText())
 
 	// Handle repeated and optional flags
 	isRepeated := strings.HasPrefix(ctx.GetText(), "repeated")
@@ -256,16 +254,13 @@ func (l *SchemaListener) EnterBlock(ctx *parser.BlockContext) {
 		isRepeated = true
 		isOptional = true
 	}
-	fmt.Printf("isRepeated %v, isOptional %v\n", isRepeated, isOptional)
 
 	if l.currentType != nil {
 		l.typeStack = append(l.typeStack, l.currentType)
 		if len(l.fieldStack) > 0 {
 			lastField := l.fieldStack[len(l.fieldStack)-1]
 			// Update the parent type's field to reference this new type
-			fmt.Printf("type name %s\n", typeName)
 			if lastField != l.currentType.Name {
-				fmt.Printf("Adding field %s of type %s to parent type %s\n", lastField, typeName, l.currentType.Name)
 				l.currentType.Fields[strings.ToLower(lastField)] = FieldType{
 					Type:       typeName,
 					IsArray:    isRepeated,
@@ -286,15 +281,11 @@ func (l *SchemaListener) EnterBlock(ctx *parser.BlockContext) {
 	// Process block body
 	blockBody := ctx.BlockBody()
 	if blockBody != nil {
-		fmt.Printf("Processing block body for %s\n", typeName)
-		for i, child := range blockBody.GetChildren() {
-			fmt.Printf("Child %d: ", i)
+		for _, child := range blockBody.GetChildren() {
 			switch childCtx := child.(type) {
 			case *parser.AttributeContext:
-				fmt.Printf("Attribute: %s\n", childCtx.GetText())
 				l.processAttribute(childCtx, isRepeated, isOptional)
 			case *parser.BlockContext:
-				fmt.Printf("Nested Block: %s\n", childCtx.GetText())
 				// This will be handled by a recursive call to EnterBlock
 			default:
 				fmt.Printf("Unknown type: %T, Text: %s\n", childCtx, childCtx.GetPayload())
@@ -333,8 +324,6 @@ func (l *SchemaListener) ExitBlock(ctx *parser.BlockContext) {
 					Fields:     l.currentType.Fields,
 				}
 
-				fmt.Printf("Exiting block %s, added to parent %s with isRepeated: %v, isOptional: %v\n",
-					currentTypeName, parentType.Name, isRepeated, isOptional)
 			}
 		}
 
@@ -373,7 +362,6 @@ func (l *SchemaListener) processAttribute(ctx *parser.AttributeContext, parentRe
 func (l *SchemaListener) EnterAttribute(ctx *parser.AttributeContext) {
 	if l.currentType != nil {
 		fieldName := ctx.IDENTIFIER().GetSymbol().GetText()
-		fmt.Printf("getetxt %s\n", ctx.GetChild(0).GetPayload().(antlr.Token).GetText())
 
 		if ctx.GetChild(0).GetPayload().(antlr.Token).GetText() == "optional repeated" {
 			l.isRepeated = true
@@ -382,8 +370,6 @@ func (l *SchemaListener) EnterAttribute(ctx *parser.AttributeContext) {
 			l.isRepeated = ctx.GetChild(0).GetPayload().(antlr.Token).GetText() == "repeated"
 			l.isOptional = ctx.GetChild(0).GetPayload().(antlr.Token).GetText() == "optional"
 		}
-
-		fmt.Printf("value: %v\n", ctx.Value())
 
 		var fieldType FieldType
 		if ctx.Value() != nil {
