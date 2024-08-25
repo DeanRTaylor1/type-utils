@@ -41,6 +41,7 @@ func main() {
 			log.Fatalf("Error processing schemas from Git repo: %v", err)
 		}
 
+		fmt.Println("generation from git repo")
 		for _, v := range schemas {
 			err = generator.Generate(config.Language, &v.Config, v.Schema)
 			if err != nil {

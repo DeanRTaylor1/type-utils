@@ -39,6 +39,7 @@ func getOutputDir(config *listener.Config, outputLang string) string {
 		}
 	case "typescript":
 		if config.TypeScriptOutputDir != "" {
+			fmt.Println("typescript output dir: ", config.TypeScriptOutputDir)
 			return config.TypeScriptOutputDir
 		}
 	default:
@@ -60,6 +61,7 @@ func getFileType(outputLang string) string {
 
 func Generate(outputLang string, config *listener.Config, schema map[string]*listener.SchemaType) error {
 	outputDir := fmt.Sprintf("%s/%s", getOutputDir(config, outputLang), config.PackageName)
+	fmt.Println("Output directory: ", outputDir)
 	err := os.MkdirAll(outputDir, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to create output directory: %v", err)

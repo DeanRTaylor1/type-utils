@@ -1,83 +1,67 @@
 package fetcher
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/deanrtaylor1/type-utils/listener"
 	"github.com/deanrtaylor1/type-utils/parser"
+	"github.com/google/uuid"
+	"golang.org/x/exp/rand"
 )
 
-func ParseSchemasFromGitRepo(repo, path string) ([]*listener.SchemaListener, error) {
-	// Assuming the repo is in the format "username/repo"
-	baseURL := fmt.Sprintf("https://api.github.com/repos/%s/contents/%s", repo, path)
-
-	// Fetch the list of files in the specified directory
-	resp, err := http.Get(baseURL)
+func ParseSchemasFromGitRepo(repoURL, path string) ([]*listener.SchemaListener, error) {
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch schema files: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("failed to fetch schema files, status: %d", resp.StatusCode)
+		return nil, fmt.Errorf("failed to get user home directory: %v", err)
 	}
 
-	var files []struct {
-		Name string `json:"name"`
-		URL  string `json:"download_url"`
+	uuid, err := uuid.NewRandom()
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate UUID: %v", err)
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&files); err != nil {
-		return nil, fmt.Errorf("failed to parse response: %v", err)
+
+	tmpDir := filepath.Join(homeDir, "tmp", "git-clone-"+uuid.String())
+	err = os.MkdirAll(tmpDir, 0755)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create temporary directory: %v", err)
+	}
+	defer os.RemoveAll(tmpDir)
+
+	fullUrl := fmt.Sprintf("https://github.com/%s", repoURL)
+	cmd := exec.Command("git", "clone", "--quiet", "--depth", "1", fullUrl, tmpDir)
+	err = cmd.Run()
+	if err != nil {
+		return nil, fmt.Errorf("failed to clone repository: %v", err)
+	}
+
+	fullPath := filepath.Join(tmpDir, path)
+	files, err := os.ReadDir(fullPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read directory: %v", err)
 	}
 
 	schemas := make([]*listener.SchemaListener, 0)
-
 	for _, file := range files {
-		if !strings.HasSuffix(file.Name, ".hcl") {
+		if !strings.HasSuffix(file.Name(), ".hcl") {
 			continue
 		}
-
-		// Fetch the content of each .hcl file
-		content, err := fetchFileContent(file.URL)
+		content, err := os.ReadFile(filepath.Join(fullPath, file.Name()))
 		if err != nil {
-			return nil, fmt.Errorf("failed to fetch content of %s: %v", file.Name, err)
+			return nil, fmt.Errorf("failed to read file %s: %v", file.Name(), err)
 		}
-
-		// Parse the schema
-		fileSchemas, err := parseSchema(content)
+		fileSchema, err := parseSchema(string(content))
 		if err != nil {
-			return nil, fmt.Errorf("failed to parse schema in %s: %v", file.Name, err)
+			return nil, fmt.Errorf("failed to parse schema in %s: %v", file.Name(), err)
 		}
-
-		schemas = append(schemas, fileSchemas)
-
+		schemas = append(schemas, fileSchema)
 	}
 
 	return schemas, nil
-}
-
-func fetchFileContent(url string) (string, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("failed to fetch file, status: %d", resp.StatusCode)
-	}
-
-	content, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-
-	return string(content), nil
 }
 
 func parseSchema(input string) (*listener.SchemaListener, error) {
@@ -86,6 +70,14 @@ func parseSchema(input string) (*listener.SchemaListener, error) {
 	p := parser.NewHCLLikeDSLParser(stream)
 	schemaListener := listener.NewSchemaListener()
 	antlr.ParseTreeWalkerDefault.Walk(schemaListener, p.File())
-
 	return schemaListener, nil
+}
+
+func randString(n int) string {
+	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
 }
