@@ -10,6 +10,7 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/deanrtaylor1/type-utils/config"
 	"github.com/deanrtaylor1/type-utils/constants"
+	"github.com/deanrtaylor1/type-utils/fetcher"
 	"github.com/deanrtaylor1/type-utils/generator"
 	"github.com/deanrtaylor1/type-utils/listener"
 	"github.com/deanrtaylor1/type-utils/parser"
@@ -27,36 +28,52 @@ func main() {
 	if config.Version != "v1" {
 		log.Fatalf("Unsupported version in config: %s", config.Version)
 	}
-
 	if config.Language == "" {
 		log.Fatalf("Language not specified in config")
 	}
 
 	utils.Debug("Config loaded - Version: %s, Language: %s\n", config.Version, config.Language)
 
-	var schemasDirName string
-	if config.SchemasDirName == "" {
-		schemasDirName = fmt.Sprintf("./%s", constants.DEFAULT_SCHEMA_DIR_NAME)
-	} else {
-		schemasDirName = fmt.Sprintf("./%s", config.SchemasDirName)
-	}
-	err = filepath.Walk(schemasDirName, func(path string, info os.FileInfo, err error) error {
+	if config.GitRepo != nil && config.GitRepo.URL != "" {
+		// Process schemas from Git repository
+		schemas, err := fetcher.ParseSchemasFromGitRepo(config.GitRepo.URL, config.GitRepo.Path)
 		if err != nil {
-			return err
+			log.Fatalf("Error processing schemas from Git repo: %v", err)
 		}
-		utils.Debug("filename: %s", info.Name())
-		if !info.IsDir() && strings.HasSuffix(info.Name(), ".hcl") {
-			utils.Debug("Processing file: %s\n", path)
-			err := processHCLFile(path, config.Language)
+
+		for _, v := range schemas {
+			err = generator.Generate(config.Language, &v.Config, v.Schema)
 			if err != nil {
-				return fmt.Errorf("error processing file %s: %v", path, err)
+				log.Fatalf("Error generating types from Git repo schemas: %v", err)
 			}
 		}
-		return nil
-	})
+	} else {
+		// Process local schemas
+		var schemasDirName string
+		if config.SchemasDirName == "" {
+			schemasDirName = fmt.Sprintf("./%s", constants.DEFAULT_SCHEMA_DIR_NAME)
+		} else {
+			schemasDirName = fmt.Sprintf("./%s", config.SchemasDirName)
+		}
 
-	if err != nil {
-		log.Fatalf("Error walking through schemas directory: %v", err)
+		err = filepath.Walk(schemasDirName, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			utils.Debug("filename: %s", info.Name())
+			if !info.IsDir() && strings.HasSuffix(info.Name(), ".hcl") {
+				utils.Debug("Processing file: %s\n", path)
+				err := processHCLFile(path, config.Language)
+				if err != nil {
+					return fmt.Errorf("error processing file %s: %v", path, err)
+				}
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Fatalf("Error walking through schemas directory: %v", err)
+		}
 	}
 }
 
@@ -69,7 +86,6 @@ func processHCLFile(filePath string, language string) error {
 	lexer := parser.NewHCLLikeDSLLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 	p := parser.NewHCLLikeDSLParser(stream)
-
 	listener := listener.NewSchemaListener()
 	antlr.ParseTreeWalkerDefault.Walk(listener, p.File())
 
@@ -101,7 +117,6 @@ func processHCLFile(filePath string, language string) error {
 
 	utils.Debug("Config: %+v\n", listener.Config)
 	utils.Debug("------------------------------------")
-
 	return nil
 }
 

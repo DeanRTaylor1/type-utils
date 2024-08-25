@@ -1,2 +1,6 @@
+---
 version: "v1"
 language: "typescript"
+git_repo:
+  url: "deanrtaylor1/test-schema"
+  path: "schemas"
