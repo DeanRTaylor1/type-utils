@@ -26,6 +26,18 @@ func (s *BaseHCLLikeDSLListener) EnterFile(ctx *FileContext) {}
 // ExitFile is called when production file is exited.
 func (s *BaseHCLLikeDSLListener) ExitFile(ctx *FileContext) {}
 
+// EnterHclconfig is called when production hclconfig is entered.
+func (s *BaseHCLLikeDSLListener) EnterHclconfig(ctx *HclconfigContext) {}
+
+// ExitHclconfig is called when production hclconfig is exited.
+func (s *BaseHCLLikeDSLListener) ExitHclconfig(ctx *HclconfigContext) {}
+
+// EnterConfigAttribute is called when production configAttribute is entered.
+func (s *BaseHCLLikeDSLListener) EnterConfigAttribute(ctx *ConfigAttributeContext) {}
+
+// ExitConfigAttribute is called when production configAttribute is exited.
+func (s *BaseHCLLikeDSLListener) ExitConfigAttribute(ctx *ConfigAttributeContext) {}
+
 // EnterImportStatement is called when production importStatement is entered.
 func (s *BaseHCLLikeDSLListener) EnterImportStatement(ctx *ImportStatementContext) {}
 
@@ -37,6 +49,12 @@ func (s *BaseHCLLikeDSLListener) EnterBlock(ctx *BlockContext) {}
 
 // ExitBlock is called when production block is exited.
 func (s *BaseHCLLikeDSLListener) ExitBlock(ctx *BlockContext) {}
+
+// EnterBlockBody is called when production blockBody is entered.
+func (s *BaseHCLLikeDSLListener) EnterBlockBody(ctx *BlockBodyContext) {}
+
+// ExitBlockBody is called when production blockBody is exited.
+func (s *BaseHCLLikeDSLListener) ExitBlockBody(ctx *BlockBodyContext) {}
 
 // EnterAttribute is called when production attribute is entered.
 func (s *BaseHCLLikeDSLListener) EnterAttribute(ctx *AttributeContext) {}

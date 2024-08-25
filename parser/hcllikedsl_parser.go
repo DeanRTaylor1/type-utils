@@ -32,44 +32,56 @@ var HCLLikeDSLParserStaticData struct {
 func hcllikedslParserInit() {
 	staticData := &HCLLikeDSLParserStaticData
 	staticData.LiteralNames = []string{
-		"", "'import'", "'{'", "'}'", "'='", "'repeated'", "'['", "','", "']'",
+		"", "'HCLCONFIG'", "'{'", "'}'", "'='", "'import'", "'repeated'", "'['",
+		"','", "']'",
 	}
 	staticData.SymbolicNames = []string{
-		"", "", "", "", "", "", "", "", "", "STRING", "NUMBER", "BOOLEAN", "IDENTIFIER",
-		"WS", "COMMENT",
+		"", "", "", "", "", "", "", "", "", "", "STRING", "NUMBER", "BOOLEAN",
+		"IDENTIFIER", "WS", "COMMENT",
 	}
 	staticData.RuleNames = []string{
-		"file", "importStatement", "block", "attribute", "value", "array",
+		"file", "hclconfig", "configAttribute", "importStatement", "block",
+		"blockBody", "attribute", "value", "array",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 14, 66, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
-		4, 2, 5, 7, 5, 1, 0, 5, 0, 14, 8, 0, 10, 0, 12, 0, 17, 9, 0, 1, 0, 5, 0,
-		20, 8, 0, 10, 0, 12, 0, 23, 9, 0, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1,
-		2, 5, 2, 32, 8, 2, 10, 2, 12, 2, 35, 9, 2, 1, 2, 1, 2, 1, 3, 1, 3, 1, 3,
-		1, 3, 1, 3, 1, 3, 1, 3, 3, 3, 46, 8, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 3,
-		4, 53, 8, 4, 1, 5, 1, 5, 1, 5, 1, 5, 5, 5, 59, 8, 5, 10, 5, 12, 5, 62,
-		9, 5, 1, 5, 1, 5, 1, 5, 0, 0, 6, 0, 2, 4, 6, 8, 10, 0, 0, 69, 0, 15, 1,
-		0, 0, 0, 2, 24, 1, 0, 0, 0, 4, 27, 1, 0, 0, 0, 6, 45, 1, 0, 0, 0, 8, 52,
-		1, 0, 0, 0, 10, 54, 1, 0, 0, 0, 12, 14, 3, 2, 1, 0, 13, 12, 1, 0, 0, 0,
-		14, 17, 1, 0, 0, 0, 15, 13, 1, 0, 0, 0, 15, 16, 1, 0, 0, 0, 16, 21, 1,
-		0, 0, 0, 17, 15, 1, 0, 0, 0, 18, 20, 3, 4, 2, 0, 19, 18, 1, 0, 0, 0, 20,
-		23, 1, 0, 0, 0, 21, 19, 1, 0, 0, 0, 21, 22, 1, 0, 0, 0, 22, 1, 1, 0, 0,
-		0, 23, 21, 1, 0, 0, 0, 24, 25, 5, 1, 0, 0, 25, 26, 5, 9, 0, 0, 26, 3, 1,
-		0, 0, 0, 27, 28, 5, 12, 0, 0, 28, 33, 5, 2, 0, 0, 29, 32, 3, 6, 3, 0, 30,
-		32, 3, 4, 2, 0, 31, 29, 1, 0, 0, 0, 31, 30, 1, 0, 0, 0, 32, 35, 1, 0, 0,
-		0, 33, 31, 1, 0, 0, 0, 33, 34, 1, 0, 0, 0, 34, 36, 1, 0, 0, 0, 35, 33,
-		1, 0, 0, 0, 36, 37, 5, 3, 0, 0, 37, 5, 1, 0, 0, 0, 38, 39, 5, 12, 0, 0,
-		39, 40, 5, 4, 0, 0, 40, 46, 3, 8, 4, 0, 41, 42, 5, 5, 0, 0, 42, 43, 5,
-		12, 0, 0, 43, 44, 5, 4, 0, 0, 44, 46, 3, 8, 4, 0, 45, 38, 1, 0, 0, 0, 45,
-		41, 1, 0, 0, 0, 46, 7, 1, 0, 0, 0, 47, 53, 5, 9, 0, 0, 48, 53, 5, 10, 0,
-		0, 49, 53, 5, 11, 0, 0, 50, 53, 3, 10, 5, 0, 51, 53, 5, 12, 0, 0, 52, 47,
-		1, 0, 0, 0, 52, 48, 1, 0, 0, 0, 52, 49, 1, 0, 0, 0, 52, 50, 1, 0, 0, 0,
-		52, 51, 1, 0, 0, 0, 53, 9, 1, 0, 0, 0, 54, 55, 5, 6, 0, 0, 55, 60, 3, 8,
-		4, 0, 56, 57, 5, 7, 0, 0, 57, 59, 3, 8, 4, 0, 58, 56, 1, 0, 0, 0, 59, 62,
-		1, 0, 0, 0, 60, 58, 1, 0, 0, 0, 60, 61, 1, 0, 0, 0, 61, 63, 1, 0, 0, 0,
-		62, 60, 1, 0, 0, 0, 63, 64, 5, 8, 0, 0, 64, 11, 1, 0, 0, 0, 7, 15, 21,
-		31, 33, 45, 52, 60,
+		4, 1, 15, 93, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 1, 0, 3, 0, 20, 8, 0,
+		1, 0, 5, 0, 23, 8, 0, 10, 0, 12, 0, 26, 9, 0, 1, 0, 5, 0, 29, 8, 0, 10,
+		0, 12, 0, 32, 9, 0, 1, 1, 1, 1, 1, 1, 5, 1, 37, 8, 1, 10, 1, 12, 1, 40,
+		9, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 3, 1, 3, 1, 3, 1, 4, 1, 4,
+		1, 4, 1, 4, 1, 4, 1, 5, 1, 5, 5, 5, 58, 8, 5, 10, 5, 12, 5, 61, 9, 5, 1,
+		6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 3, 6, 71, 8, 6, 3, 6, 73,
+		8, 6, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 3, 7, 80, 8, 7, 1, 8, 1, 8, 1, 8, 1,
+		8, 5, 8, 86, 8, 8, 10, 8, 12, 8, 89, 9, 8, 1, 8, 1, 8, 1, 8, 0, 0, 9, 0,
+		2, 4, 6, 8, 10, 12, 14, 16, 0, 0, 96, 0, 19, 1, 0, 0, 0, 2, 33, 1, 0, 0,
+		0, 4, 43, 1, 0, 0, 0, 6, 47, 1, 0, 0, 0, 8, 50, 1, 0, 0, 0, 10, 59, 1,
+		0, 0, 0, 12, 72, 1, 0, 0, 0, 14, 79, 1, 0, 0, 0, 16, 81, 1, 0, 0, 0, 18,
+		20, 3, 2, 1, 0, 19, 18, 1, 0, 0, 0, 19, 20, 1, 0, 0, 0, 20, 24, 1, 0, 0,
+		0, 21, 23, 3, 6, 3, 0, 22, 21, 1, 0, 0, 0, 23, 26, 1, 0, 0, 0, 24, 22,
+		1, 0, 0, 0, 24, 25, 1, 0, 0, 0, 25, 30, 1, 0, 0, 0, 26, 24, 1, 0, 0, 0,
+		27, 29, 3, 8, 4, 0, 28, 27, 1, 0, 0, 0, 29, 32, 1, 0, 0, 0, 30, 28, 1,
+		0, 0, 0, 30, 31, 1, 0, 0, 0, 31, 1, 1, 0, 0, 0, 32, 30, 1, 0, 0, 0, 33,
+		34, 5, 1, 0, 0, 34, 38, 5, 2, 0, 0, 35, 37, 3, 4, 2, 0, 36, 35, 1, 0, 0,
+		0, 37, 40, 1, 0, 0, 0, 38, 36, 1, 0, 0, 0, 38, 39, 1, 0, 0, 0, 39, 41,
+		1, 0, 0, 0, 40, 38, 1, 0, 0, 0, 41, 42, 5, 3, 0, 0, 42, 3, 1, 0, 0, 0,
+		43, 44, 5, 13, 0, 0, 44, 45, 5, 4, 0, 0, 45, 46, 5, 10, 0, 0, 46, 5, 1,
+		0, 0, 0, 47, 48, 5, 5, 0, 0, 48, 49, 5, 10, 0, 0, 49, 7, 1, 0, 0, 0, 50,
+		51, 5, 13, 0, 0, 51, 52, 5, 2, 0, 0, 52, 53, 3, 10, 5, 0, 53, 54, 5, 3,
+		0, 0, 54, 9, 1, 0, 0, 0, 55, 58, 3, 12, 6, 0, 56, 58, 3, 8, 4, 0, 57, 55,
+		1, 0, 0, 0, 57, 56, 1, 0, 0, 0, 58, 61, 1, 0, 0, 0, 59, 57, 1, 0, 0, 0,
+		59, 60, 1, 0, 0, 0, 60, 11, 1, 0, 0, 0, 61, 59, 1, 0, 0, 0, 62, 63, 5,
+		13, 0, 0, 63, 64, 5, 4, 0, 0, 64, 73, 3, 14, 7, 0, 65, 66, 5, 6, 0, 0,
+		66, 70, 5, 13, 0, 0, 67, 68, 5, 4, 0, 0, 68, 71, 3, 14, 7, 0, 69, 71, 3,
+		8, 4, 0, 70, 67, 1, 0, 0, 0, 70, 69, 1, 0, 0, 0, 71, 73, 1, 0, 0, 0, 72,
+		62, 1, 0, 0, 0, 72, 65, 1, 0, 0, 0, 73, 13, 1, 0, 0, 0, 74, 80, 5, 10,
+		0, 0, 75, 80, 5, 11, 0, 0, 76, 80, 5, 12, 0, 0, 77, 80, 3, 16, 8, 0, 78,
+		80, 5, 13, 0, 0, 79, 74, 1, 0, 0, 0, 79, 75, 1, 0, 0, 0, 79, 76, 1, 0,
+		0, 0, 79, 77, 1, 0, 0, 0, 79, 78, 1, 0, 0, 0, 80, 15, 1, 0, 0, 0, 81, 82,
+		5, 7, 0, 0, 82, 87, 3, 14, 7, 0, 83, 84, 5, 8, 0, 0, 84, 86, 3, 14, 7,
+		0, 85, 83, 1, 0, 0, 0, 86, 89, 1, 0, 0, 0, 87, 85, 1, 0, 0, 0, 87, 88,
+		1, 0, 0, 0, 88, 90, 1, 0, 0, 0, 89, 87, 1, 0, 0, 0, 90, 91, 5, 9, 0, 0,
+		91, 17, 1, 0, 0, 0, 10, 19, 24, 30, 38, 57, 59, 70, 72, 79, 87,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -116,22 +128,26 @@ const (
 	HCLLikeDSLParserT__5       = 6
 	HCLLikeDSLParserT__6       = 7
 	HCLLikeDSLParserT__7       = 8
-	HCLLikeDSLParserSTRING     = 9
-	HCLLikeDSLParserNUMBER     = 10
-	HCLLikeDSLParserBOOLEAN    = 11
-	HCLLikeDSLParserIDENTIFIER = 12
-	HCLLikeDSLParserWS         = 13
-	HCLLikeDSLParserCOMMENT    = 14
+	HCLLikeDSLParserT__8       = 9
+	HCLLikeDSLParserSTRING     = 10
+	HCLLikeDSLParserNUMBER     = 11
+	HCLLikeDSLParserBOOLEAN    = 12
+	HCLLikeDSLParserIDENTIFIER = 13
+	HCLLikeDSLParserWS         = 14
+	HCLLikeDSLParserCOMMENT    = 15
 )
 
 // HCLLikeDSLParser rules.
 const (
 	HCLLikeDSLParserRULE_file            = 0
-	HCLLikeDSLParserRULE_importStatement = 1
-	HCLLikeDSLParserRULE_block           = 2
-	HCLLikeDSLParserRULE_attribute       = 3
-	HCLLikeDSLParserRULE_value           = 4
-	HCLLikeDSLParserRULE_array           = 5
+	HCLLikeDSLParserRULE_hclconfig       = 1
+	HCLLikeDSLParserRULE_configAttribute = 2
+	HCLLikeDSLParserRULE_importStatement = 3
+	HCLLikeDSLParserRULE_block           = 4
+	HCLLikeDSLParserRULE_blockBody       = 5
+	HCLLikeDSLParserRULE_attribute       = 6
+	HCLLikeDSLParserRULE_value           = 7
+	HCLLikeDSLParserRULE_array           = 8
 )
 
 // IFileContext is an interface to support dynamic dispatch.
@@ -142,6 +158,7 @@ type IFileContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
+	Hclconfig() IHclconfigContext
 	AllImportStatement() []IImportStatementContext
 	ImportStatement(i int) IImportStatementContext
 	AllBlock() []IBlockContext
@@ -182,6 +199,22 @@ func NewFileContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokin
 }
 
 func (s *FileContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *FileContext) Hclconfig() IHclconfigContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IHclconfigContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IHclconfigContext)
+}
 
 func (s *FileContext) AllImportStatement() []IImportStatementContext {
 	children := s.GetChildren()
@@ -291,27 +324,41 @@ func (p *HCLLikeDSLParser) File() (localctx IFileContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(15)
+	p.SetState(19)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == HCLLikeDSLParserT__0 {
+	if _la == HCLLikeDSLParserT__0 {
 		{
-			p.SetState(12)
+			p.SetState(18)
+			p.Hclconfig()
+		}
+
+	}
+	p.SetState(24)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for _la == HCLLikeDSLParserT__4 {
+		{
+			p.SetState(21)
 			p.ImportStatement()
 		}
 
-		p.SetState(17)
+		p.SetState(26)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 	}
-	p.SetState(21)
+	p.SetState(30)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -320,16 +367,305 @@ func (p *HCLLikeDSLParser) File() (localctx IFileContext) {
 
 	for _la == HCLLikeDSLParserIDENTIFIER {
 		{
-			p.SetState(18)
+			p.SetState(27)
 			p.Block()
 		}
 
-		p.SetState(23)
+		p.SetState(32)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IHclconfigContext is an interface to support dynamic dispatch.
+type IHclconfigContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AllConfigAttribute() []IConfigAttributeContext
+	ConfigAttribute(i int) IConfigAttributeContext
+
+	// IsHclconfigContext differentiates from other interfaces.
+	IsHclconfigContext()
+}
+
+type HclconfigContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyHclconfigContext() *HclconfigContext {
+	var p = new(HclconfigContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = HCLLikeDSLParserRULE_hclconfig
+	return p
+}
+
+func InitEmptyHclconfigContext(p *HclconfigContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = HCLLikeDSLParserRULE_hclconfig
+}
+
+func (*HclconfigContext) IsHclconfigContext() {}
+
+func NewHclconfigContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *HclconfigContext {
+	var p = new(HclconfigContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = HCLLikeDSLParserRULE_hclconfig
+
+	return p
+}
+
+func (s *HclconfigContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *HclconfigContext) AllConfigAttribute() []IConfigAttributeContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IConfigAttributeContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IConfigAttributeContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IConfigAttributeContext); ok {
+			tst[i] = t.(IConfigAttributeContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *HclconfigContext) ConfigAttribute(i int) IConfigAttributeContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IConfigAttributeContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IConfigAttributeContext)
+}
+
+func (s *HclconfigContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *HclconfigContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *HclconfigContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(HCLLikeDSLListener); ok {
+		listenerT.EnterHclconfig(s)
+	}
+}
+
+func (s *HclconfigContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(HCLLikeDSLListener); ok {
+		listenerT.ExitHclconfig(s)
+	}
+}
+
+func (p *HCLLikeDSLParser) Hclconfig() (localctx IHclconfigContext) {
+	localctx = NewHclconfigContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 2, HCLLikeDSLParserRULE_hclconfig)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(33)
+		p.Match(HCLLikeDSLParserT__0)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(34)
+		p.Match(HCLLikeDSLParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(38)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for _la == HCLLikeDSLParserIDENTIFIER {
+		{
+			p.SetState(35)
+			p.ConfigAttribute()
+		}
+
+		p.SetState(40)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+	{
+		p.SetState(41)
+		p.Match(HCLLikeDSLParserT__2)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IConfigAttributeContext is an interface to support dynamic dispatch.
+type IConfigAttributeContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	IDENTIFIER() antlr.TerminalNode
+	STRING() antlr.TerminalNode
+
+	// IsConfigAttributeContext differentiates from other interfaces.
+	IsConfigAttributeContext()
+}
+
+type ConfigAttributeContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyConfigAttributeContext() *ConfigAttributeContext {
+	var p = new(ConfigAttributeContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = HCLLikeDSLParserRULE_configAttribute
+	return p
+}
+
+func InitEmptyConfigAttributeContext(p *ConfigAttributeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = HCLLikeDSLParserRULE_configAttribute
+}
+
+func (*ConfigAttributeContext) IsConfigAttributeContext() {}
+
+func NewConfigAttributeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ConfigAttributeContext {
+	var p = new(ConfigAttributeContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = HCLLikeDSLParserRULE_configAttribute
+
+	return p
+}
+
+func (s *ConfigAttributeContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *ConfigAttributeContext) IDENTIFIER() antlr.TerminalNode {
+	return s.GetToken(HCLLikeDSLParserIDENTIFIER, 0)
+}
+
+func (s *ConfigAttributeContext) STRING() antlr.TerminalNode {
+	return s.GetToken(HCLLikeDSLParserSTRING, 0)
+}
+
+func (s *ConfigAttributeContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *ConfigAttributeContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *ConfigAttributeContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(HCLLikeDSLListener); ok {
+		listenerT.EnterConfigAttribute(s)
+	}
+}
+
+func (s *ConfigAttributeContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(HCLLikeDSLListener); ok {
+		listenerT.ExitConfigAttribute(s)
+	}
+}
+
+func (p *HCLLikeDSLParser) ConfigAttribute() (localctx IConfigAttributeContext) {
+	localctx = NewConfigAttributeContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 4, HCLLikeDSLParserRULE_configAttribute)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(43)
+		p.Match(HCLLikeDSLParserIDENTIFIER)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(44)
+		p.Match(HCLLikeDSLParserT__3)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(45)
+		p.Match(HCLLikeDSLParserSTRING)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
 errorExit:
@@ -417,18 +753,18 @@ func (s *ImportStatementContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *HCLLikeDSLParser) ImportStatement() (localctx IImportStatementContext) {
 	localctx = NewImportStatementContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 2, HCLLikeDSLParserRULE_importStatement)
+	p.EnterRule(localctx, 6, HCLLikeDSLParserRULE_importStatement)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(24)
-		p.Match(HCLLikeDSLParserT__0)
+		p.SetState(47)
+		p.Match(HCLLikeDSLParserT__4)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
 	{
-		p.SetState(25)
+		p.SetState(48)
 		p.Match(HCLLikeDSLParserSTRING)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -458,10 +794,7 @@ type IBlockContext interface {
 
 	// Getter signatures
 	IDENTIFIER() antlr.TerminalNode
-	AllAttribute() []IAttributeContext
-	Attribute(i int) IAttributeContext
-	AllBlock() []IBlockContext
-	Block(i int) IBlockContext
+	BlockBody() IBlockBodyContext
 
 	// IsBlockContext differentiates from other interfaces.
 	IsBlockContext()
@@ -503,37 +836,12 @@ func (s *BlockContext) IDENTIFIER() antlr.TerminalNode {
 	return s.GetToken(HCLLikeDSLParserIDENTIFIER, 0)
 }
 
-func (s *BlockContext) AllAttribute() []IAttributeContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IAttributeContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IAttributeContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IAttributeContext); ok {
-			tst[i] = t.(IAttributeContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *BlockContext) Attribute(i int) IAttributeContext {
+func (s *BlockContext) BlockBody() IBlockBodyContext {
 	var t antlr.RuleContext
-	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IAttributeContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
+		if _, ok := ctx.(IBlockBodyContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
 		}
 	}
 
@@ -541,48 +849,7 @@ func (s *BlockContext) Attribute(i int) IAttributeContext {
 		return nil
 	}
 
-	return t.(IAttributeContext)
-}
-
-func (s *BlockContext) AllBlock() []IBlockContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IBlockContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IBlockContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IBlockContext); ok {
-			tst[i] = t.(IBlockContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *BlockContext) Block(i int) IBlockContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IBlockContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IBlockContext)
+	return t.(IBlockBodyContext)
 }
 
 func (s *BlockContext) GetRuleContext() antlr.RuleContext {
@@ -607,12 +874,10 @@ func (s *BlockContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *HCLLikeDSLParser) Block() (localctx IBlockContext) {
 	localctx = NewBlockContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 4, HCLLikeDSLParserRULE_block)
-	var _la int
-
+	p.EnterRule(localctx, 8, HCLLikeDSLParserRULE_block)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(27)
+		p.SetState(50)
 		p.Match(HCLLikeDSLParserIDENTIFIER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -620,37 +885,220 @@ func (p *HCLLikeDSLParser) Block() (localctx IBlockContext) {
 		}
 	}
 	{
-		p.SetState(28)
+		p.SetState(51)
 		p.Match(HCLLikeDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(33)
+	{
+		p.SetState(52)
+		p.BlockBody()
+	}
+	{
+		p.SetState(53)
+		p.Match(HCLLikeDSLParserT__2)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IBlockBodyContext is an interface to support dynamic dispatch.
+type IBlockBodyContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AllAttribute() []IAttributeContext
+	Attribute(i int) IAttributeContext
+	AllBlock() []IBlockContext
+	Block(i int) IBlockContext
+
+	// IsBlockBodyContext differentiates from other interfaces.
+	IsBlockBodyContext()
+}
+
+type BlockBodyContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyBlockBodyContext() *BlockBodyContext {
+	var p = new(BlockBodyContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = HCLLikeDSLParserRULE_blockBody
+	return p
+}
+
+func InitEmptyBlockBodyContext(p *BlockBodyContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = HCLLikeDSLParserRULE_blockBody
+}
+
+func (*BlockBodyContext) IsBlockBodyContext() {}
+
+func NewBlockBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BlockBodyContext {
+	var p = new(BlockBodyContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = HCLLikeDSLParserRULE_blockBody
+
+	return p
+}
+
+func (s *BlockBodyContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *BlockBodyContext) AllAttribute() []IAttributeContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IAttributeContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IAttributeContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IAttributeContext); ok {
+			tst[i] = t.(IAttributeContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *BlockBodyContext) Attribute(i int) IAttributeContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IAttributeContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IAttributeContext)
+}
+
+func (s *BlockBodyContext) AllBlock() []IBlockContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IBlockContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IBlockContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IBlockContext); ok {
+			tst[i] = t.(IBlockContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *BlockBodyContext) Block(i int) IBlockContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IBlockContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBlockContext)
+}
+
+func (s *BlockBodyContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *BlockBodyContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *BlockBodyContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(HCLLikeDSLListener); ok {
+		listenerT.EnterBlockBody(s)
+	}
+}
+
+func (s *BlockBodyContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(HCLLikeDSLListener); ok {
+		listenerT.ExitBlockBody(s)
+	}
+}
+
+func (p *HCLLikeDSLParser) BlockBody() (localctx IBlockBodyContext) {
+	localctx = NewBlockBodyContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 10, HCLLikeDSLParserRULE_blockBody)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	p.SetState(59)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == HCLLikeDSLParserT__4 || _la == HCLLikeDSLParserIDENTIFIER {
-		p.SetState(31)
+	for _la == HCLLikeDSLParserT__5 || _la == HCLLikeDSLParserIDENTIFIER {
+		p.SetState(57)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 
-		switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 2, p.GetParserRuleContext()) {
+		switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 4, p.GetParserRuleContext()) {
 		case 1:
 			{
-				p.SetState(29)
+				p.SetState(55)
 				p.Attribute()
 			}
 
 		case 2:
 			{
-				p.SetState(30)
+				p.SetState(56)
 				p.Block()
 			}
 
@@ -658,20 +1106,12 @@ func (p *HCLLikeDSLParser) Block() (localctx IBlockContext) {
 			goto errorExit
 		}
 
-		p.SetState(35)
+		p.SetState(61)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
-	}
-	{
-		p.SetState(36)
-		p.Match(HCLLikeDSLParserT__2)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
 	}
 
 errorExit:
@@ -697,6 +1137,7 @@ type IAttributeContext interface {
 	// Getter signatures
 	IDENTIFIER() antlr.TerminalNode
 	Value() IValueContext
+	Block() IBlockContext
 
 	// IsAttributeContext differentiates from other interfaces.
 	IsAttributeContext()
@@ -754,6 +1195,22 @@ func (s *AttributeContext) Value() IValueContext {
 	return t.(IValueContext)
 }
 
+func (s *AttributeContext) Block() IBlockContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IBlockContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBlockContext)
+}
+
 func (s *AttributeContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -776,8 +1233,8 @@ func (s *AttributeContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *HCLLikeDSLParser) Attribute() (localctx IAttributeContext) {
 	localctx = NewAttributeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 6, HCLLikeDSLParserRULE_attribute)
-	p.SetState(45)
+	p.EnterRule(localctx, 12, HCLLikeDSLParserRULE_attribute)
+	p.SetState(72)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -787,7 +1244,7 @@ func (p *HCLLikeDSLParser) Attribute() (localctx IAttributeContext) {
 	case HCLLikeDSLParserIDENTIFIER:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(38)
+			p.SetState(62)
 			p.Match(HCLLikeDSLParserIDENTIFIER)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -795,7 +1252,7 @@ func (p *HCLLikeDSLParser) Attribute() (localctx IAttributeContext) {
 			}
 		}
 		{
-			p.SetState(39)
+			p.SetState(63)
 			p.Match(HCLLikeDSLParserT__3)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -803,39 +1260,58 @@ func (p *HCLLikeDSLParser) Attribute() (localctx IAttributeContext) {
 			}
 		}
 		{
-			p.SetState(40)
+			p.SetState(64)
 			p.Value()
 		}
 
-	case HCLLikeDSLParserT__4:
+	case HCLLikeDSLParserT__5:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(41)
-			p.Match(HCLLikeDSLParserT__4)
+			p.SetState(65)
+			p.Match(HCLLikeDSLParserT__5)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(42)
+			p.SetState(66)
 			p.Match(HCLLikeDSLParserIDENTIFIER)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		{
-			p.SetState(43)
-			p.Match(HCLLikeDSLParserT__3)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+		p.SetState(70)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
 		}
-		{
-			p.SetState(44)
-			p.Value()
+
+		switch p.GetTokenStream().LA(1) {
+		case HCLLikeDSLParserT__3:
+			{
+				p.SetState(67)
+				p.Match(HCLLikeDSLParserT__3)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			{
+				p.SetState(68)
+				p.Value()
+			}
+
+		case HCLLikeDSLParserIDENTIFIER:
+			{
+				p.SetState(69)
+				p.Block()
+			}
+
+		default:
+			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			goto errorExit
 		}
 
 	default:
@@ -960,8 +1436,8 @@ func (s *ValueContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *HCLLikeDSLParser) Value() (localctx IValueContext) {
 	localctx = NewValueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 8, HCLLikeDSLParserRULE_value)
-	p.SetState(52)
+	p.EnterRule(localctx, 14, HCLLikeDSLParserRULE_value)
+	p.SetState(79)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -971,7 +1447,7 @@ func (p *HCLLikeDSLParser) Value() (localctx IValueContext) {
 	case HCLLikeDSLParserSTRING:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(47)
+			p.SetState(74)
 			p.Match(HCLLikeDSLParserSTRING)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -982,7 +1458,7 @@ func (p *HCLLikeDSLParser) Value() (localctx IValueContext) {
 	case HCLLikeDSLParserNUMBER:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(48)
+			p.SetState(75)
 			p.Match(HCLLikeDSLParserNUMBER)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -993,7 +1469,7 @@ func (p *HCLLikeDSLParser) Value() (localctx IValueContext) {
 	case HCLLikeDSLParserBOOLEAN:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(49)
+			p.SetState(76)
 			p.Match(HCLLikeDSLParserBOOLEAN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1001,17 +1477,17 @@ func (p *HCLLikeDSLParser) Value() (localctx IValueContext) {
 			}
 		}
 
-	case HCLLikeDSLParserT__5:
+	case HCLLikeDSLParserT__6:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(50)
+			p.SetState(77)
 			p.Array()
 		}
 
 	case HCLLikeDSLParserIDENTIFIER:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(51)
+			p.SetState(78)
 			p.Match(HCLLikeDSLParserIDENTIFIER)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1147,44 +1623,44 @@ func (s *ArrayContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *HCLLikeDSLParser) Array() (localctx IArrayContext) {
 	localctx = NewArrayContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, HCLLikeDSLParserRULE_array)
+	p.EnterRule(localctx, 16, HCLLikeDSLParserRULE_array)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(54)
-		p.Match(HCLLikeDSLParserT__5)
+		p.SetState(81)
+		p.Match(HCLLikeDSLParserT__6)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
 	{
-		p.SetState(55)
+		p.SetState(82)
 		p.Value()
 	}
-	p.SetState(60)
+	p.SetState(87)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == HCLLikeDSLParserT__6 {
+	for _la == HCLLikeDSLParserT__7 {
 		{
-			p.SetState(56)
-			p.Match(HCLLikeDSLParserT__6)
+			p.SetState(83)
+			p.Match(HCLLikeDSLParserT__7)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(57)
+			p.SetState(84)
 			p.Value()
 		}
 
-		p.SetState(62)
+		p.SetState(89)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1192,8 +1668,8 @@ func (p *HCLLikeDSLParser) Array() (localctx IArrayContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(63)
-		p.Match(HCLLikeDSLParserT__7)
+		p.SetState(90)
+		p.Match(HCLLikeDSLParserT__8)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit

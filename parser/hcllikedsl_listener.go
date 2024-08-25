@@ -10,11 +10,20 @@ type HCLLikeDSLListener interface {
 	// EnterFile is called when entering the file production.
 	EnterFile(c *FileContext)
 
+	// EnterHclconfig is called when entering the hclconfig production.
+	EnterHclconfig(c *HclconfigContext)
+
+	// EnterConfigAttribute is called when entering the configAttribute production.
+	EnterConfigAttribute(c *ConfigAttributeContext)
+
 	// EnterImportStatement is called when entering the importStatement production.
 	EnterImportStatement(c *ImportStatementContext)
 
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
+
+	// EnterBlockBody is called when entering the blockBody production.
+	EnterBlockBody(c *BlockBodyContext)
 
 	// EnterAttribute is called when entering the attribute production.
 	EnterAttribute(c *AttributeContext)
@@ -28,11 +37,20 @@ type HCLLikeDSLListener interface {
 	// ExitFile is called when exiting the file production.
 	ExitFile(c *FileContext)
 
+	// ExitHclconfig is called when exiting the hclconfig production.
+	ExitHclconfig(c *HclconfigContext)
+
+	// ExitConfigAttribute is called when exiting the configAttribute production.
+	ExitConfigAttribute(c *ConfigAttributeContext)
+
 	// ExitImportStatement is called when exiting the importStatement production.
 	ExitImportStatement(c *ImportStatementContext)
 
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
+
+	// ExitBlockBody is called when exiting the blockBody production.
+	ExitBlockBody(c *BlockBodyContext)
 
 	// ExitAttribute is called when exiting the attribute production.
 	ExitAttribute(c *AttributeContext)

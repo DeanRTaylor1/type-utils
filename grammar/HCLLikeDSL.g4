@@ -1,14 +1,20 @@
 grammar HCLLikeDSL;
 
-file: importStatement* block*;
+file: hclconfig? importStatement* block*;
+
+hclconfig: 'HCLCONFIG' '{' configAttribute* '}';
+
+configAttribute: IDENTIFIER '=' STRING;
 
 importStatement: 'import' STRING;
 
-block: IDENTIFIER '{' (attribute | block)* '}';
+block: IDENTIFIER '{' blockBody '}';
+
+blockBody: (attribute | block)*;
 
 attribute:
 	IDENTIFIER '=' value
-	| 'repeated' IDENTIFIER '=' value;
+	| 'repeated' IDENTIFIER ('=' value | block);
 
 value: STRING | NUMBER | BOOLEAN | array | IDENTIFIER;
 
