@@ -5,10 +5,10 @@ HCLCONFIG {
 }
 # comment
 User {
-    authentication {
+    optional authentication {
         id = "string"
         mfa_enabled = "boolean"
-        repeated provider {
+        optional repeated provider {
             name = "string"
             url = "string"
         }
@@ -22,3 +22,8 @@ User {
     }
 }
 
+Example {
+    repeated name = "string"
+    optional age = "int"
+    optional repeated address = "string"
+}

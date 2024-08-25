@@ -12,7 +12,7 @@ block:
 	IDENTIFIER '{' blockBody '}'
 	| 'repeated' IDENTIFIER '{' blockBody '}'
 	| 'optional' IDENTIFIER '{' blockBody '}'
-	| 'optional repeated' '{' blockBody '}';
+	| 'optional repeated' IDENTIFIER '{' blockBody '}';
 
 blockBody: (attribute | block)*;
 
