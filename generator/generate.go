@@ -46,6 +46,10 @@ func getOutputDir(config *listener.Config, outputLang string) string {
 		if config.JavascriptOutputDir != "" {
 			return config.JavascriptOutputDir
 		}
+	case "java":
+		if config.JavaOutputDir != "" {
+			return config.JavaOutputDir
+		}
 	default:
 		panic("unsupported output language")
 	}
@@ -60,6 +64,8 @@ func getFileType(outputLang string) string {
 		return "ts"
 	case "javascript", "js":
 		return "js"
+	case "java":
+		return "java"
 	default:
 		panic("unsupported output language")
 	}
@@ -160,6 +166,14 @@ func getGenerator(yamlConfig config.TypeUtilConfiger, config *listener.Config, f
 			schema:           schema,
 			TypeUtilConfiger: yamlConfig,
 		}, nil
+	case "java":
+		return &JavaSchemaGenerator{
+			file:             file,
+			schema:           schema,
+			listenerConfig:   config,
+			TypeUtilConfiger: yamlConfig,
+		}, nil
+
 	default:
 		return nil, fmt.Errorf("no generator for output language: %s", yamlConfig.GetLanguage())
 	}
