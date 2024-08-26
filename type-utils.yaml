@@ -1,6 +1,6 @@
 ---
 version: "v1"
-language: "java"
+language: "javascript"
 generate_constructors: true
 git_repo:
   url: "deanrtaylor1/test-schema"
