@@ -5,14 +5,16 @@ import (
 	"os"
 	"strings"
 
+	"github.com/deanrtaylor1/type-utils/config"
 	"github.com/deanrtaylor1/type-utils/listener"
 	"github.com/deanrtaylor1/type-utils/utils"
 )
 
 type GoSchemaGenerator struct {
-	file   *os.File
-	config *listener.Config
-	schema map[string]*listener.SchemaType
+	file           *os.File
+	listenerConfig *listener.Config
+	schema         map[string]*listener.SchemaType
+	config.TypeUtilConfiger
 }
 
 func (g *GoSchemaGenerator) GetFile() *os.File {
@@ -20,7 +22,7 @@ func (g *GoSchemaGenerator) GetFile() *os.File {
 }
 
 func (g *GoSchemaGenerator) GetConfig() *listener.Config {
-	return g.config
+	return g.listenerConfig
 }
 
 func (g *GoSchemaGenerator) GetSchema() map[string]*listener.SchemaType {
@@ -33,6 +35,8 @@ func (g *GoSchemaGenerator) GeneratePackageDeclaration(config *listener.Config) 
 
 func (g *GoSchemaGenerator) GenerateTypeDefinition(typeName string, schemaType *listener.SchemaType) (string, error) {
 	var b strings.Builder
+
+	// Generate struct definition
 	fmt.Fprintf(&b, "type %s struct {\n", typeName)
 	for fieldName, fieldType := range schemaType.Fields {
 		fieldDef, err := g.GenerateFieldDefinition(fieldName, &fieldType)
@@ -42,6 +46,30 @@ func (g *GoSchemaGenerator) GenerateTypeDefinition(typeName string, schemaType *
 		fmt.Fprintf(&b, "\t%s\n", fieldDef)
 	}
 	fmt.Fprintln(&b, "}")
+
+	// Generate New function
+	fmt.Fprintf(&b, "\nfunc New%s(", typeName)
+
+	// Function parameters
+	var params []string
+	for fieldName, fieldType := range schemaType.Fields {
+		paramType := g.ConvertType(fieldType.Type)
+		if fieldType.IsArray {
+			paramType = "[]" + paramType
+		}
+		params = append(params, fmt.Sprintf("%s %s", fieldName, paramType))
+	}
+	fmt.Fprintf(&b, strings.Join(params, ", "))
+	fmt.Fprintf(&b, ") *%s {\n", typeName)
+
+	// Function body
+	fmt.Fprintf(&b, "\treturn &%s{\n", typeName)
+	for fieldName := range schemaType.Fields {
+		fmt.Fprintf(&b, "\t\t%s: %s,\n", utils.CapitalizeFirstLetter(fieldName), fieldName)
+	}
+	fmt.Fprintln(&b, "\t}")
+	fmt.Fprintln(&b, "}")
+
 	return b.String(), nil
 }
 

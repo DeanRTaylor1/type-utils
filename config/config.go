@@ -7,10 +7,11 @@ import (
 )
 
 type Config struct {
-	Version        string   `yaml:"version"`
-	Language       string   `yaml:"language"`
-	SchemasDirName string   `yaml:"schemas_dir_name,omitempty"`
-	GitRepo        *GitRepo `yaml:"git_repo,omitempty"`
+	Version              string   `yaml:"version"`
+	Language             string   `yaml:"language"`
+	SchemasDirName       string   `yaml:"schemas_dir_name,omitempty"`
+	GitRepo              *GitRepo `yaml:"git_repo,omitempty"`
+	GenerateConstructors bool     `yaml:"generate_constructors,omitempty"`
 }
 
 func (c *Config) GetVersion() string {
@@ -30,4 +31,8 @@ func (c *Config) GetSchemasDirName() string {
 
 func (c *Config) GetGitRepo() GitRepoConfiger {
 	return c.GitRepo
+}
+
+func (c *Config) GetGenerateConstructors() bool {
+	return c.GenerateConstructors
 }

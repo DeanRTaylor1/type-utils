@@ -15,6 +15,7 @@ type TypeUtilConfiger interface {
 	GetLanguage() string
 	GetSchemasDirName() string
 	GetGitRepo() GitRepoConfiger
+	GetGenerateConstructors() bool
 }
 
 type Configer interface {

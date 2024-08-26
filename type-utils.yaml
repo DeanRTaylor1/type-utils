@@ -1,6 +1,7 @@
 ---
 version: "v1"
-language: "js"
+language: "go"
+generate_constructors: true
 git_repo:
   url: "deanrtaylor1/test-schema"
   path: "schemas"

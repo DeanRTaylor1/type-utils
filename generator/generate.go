@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/deanrtaylor1/type-utils/config"
 	"github.com/deanrtaylor1/type-utils/listener"
 )
 
@@ -64,7 +65,8 @@ func getFileType(outputLang string) string {
 	}
 }
 
-func Generate(outputLang string, config *listener.Config, schema map[string]*listener.SchemaType) error {
+func Generate(typeUtilsConfig config.TypeUtilConfiger, config *listener.Config, schema map[string]*listener.SchemaType) error {
+	outputLang := typeUtilsConfig.GetLanguage()
 	outputDir := fmt.Sprintf("%s/%s", getOutputDir(config, outputLang), config.PackageName)
 	fmt.Println("Output directory: ", outputDir)
 	err := os.MkdirAll(outputDir, os.ModePerm)
@@ -83,7 +85,7 @@ func Generate(outputLang string, config *listener.Config, schema map[string]*lis
 	}
 	defer file.Close()
 
-	generator, err := getGenerator(outputLang, config, file, schema)
+	generator, err := getGenerator(typeUtilsConfig, config, file, schema)
 	if err != nil {
 		return err
 	}
@@ -93,6 +95,7 @@ func Generate(outputLang string, config *listener.Config, schema map[string]*lis
 }
 
 type SchemaGenerator interface {
+	config.TypeUtilConfiger
 	GeneratePackageDeclaration(config *listener.Config) (string, error)
 	GenerateTypeDefinition(typeName string, schemaType *listener.SchemaType) (string, error)
 	GenerateFieldDefinition(fieldName string, fieldType *listener.FieldType) (string, error)
@@ -134,27 +137,30 @@ func gen(sg SchemaGenerator) error {
 	return nil
 }
 
-func getGenerator(outputLang string, config *listener.Config, file *os.File, schema map[string]*listener.SchemaType) (SchemaGenerator, error) {
-	switch strings.ToLower(outputLang) {
+func getGenerator(yamlConfig config.TypeUtilConfiger, config *listener.Config, file *os.File, schema map[string]*listener.SchemaType) (SchemaGenerator, error) {
+	switch strings.ToLower(yamlConfig.GetLanguage()) {
 	case "typescript", "ts":
 		return &TypeScriptSchemaGenerator{
-			file:   file,
-			config: config,
-			schema: schema,
+			file:             file,
+			listenerConfig:   config,
+			schema:           schema,
+			TypeUtilConfiger: yamlConfig,
 		}, nil
 	case "js", "javascript":
 		return &JavaScriptSchemaGenerator{
-			file:   file,
-			config: config,
-			schema: schema,
+			file:             file,
+			listenerConfig:   config,
+			schema:           schema,
+			TypeUtilConfiger: yamlConfig,
 		}, nil
 	case "go":
 		return &GoSchemaGenerator{
-			file:   file,
-			config: config,
-			schema: schema,
+			file:             file,
+			listenerConfig:   config,
+			schema:           schema,
+			TypeUtilConfiger: yamlConfig,
 		}, nil
 	default:
-		return nil, fmt.Errorf("no generator for output language: %s", outputLang)
+		return nil, fmt.Errorf("no generator for output language: %s", yamlConfig.GetLanguage())
 	}
 }

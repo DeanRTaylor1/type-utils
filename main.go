@@ -45,7 +45,7 @@ func main() {
 	}
 
 	for _, v := range schemas {
-		err = generator.Generate(configer.GetConfig().GetLanguage(), &v.Config, v.Schema)
+		err = generator.Generate(configer.GetConfig(), &v.Config, v.Schema)
 		if err != nil {
 			log.Fatalf("Error generating types from Git repo schemas: %v", err)
 		}
