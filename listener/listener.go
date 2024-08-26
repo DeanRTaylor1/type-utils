@@ -49,6 +49,9 @@ type Config struct {
 	GoGenerateTags []string // e.g., json, xml, yaml
 	GoUsePointers  bool
 
+	// JavaScript-specific options
+	JsModuleSystem string // e.g., "CommonJS", "ES6"
+
 	// TypeScript-specific options
 	TsNamespace    string
 	TsModuleSystem string // e.g., "CommonJS", "ES6"
@@ -86,6 +89,13 @@ type Config struct {
 	GenerateValidation    bool
 	GenerateToString      bool
 	GenerateDocumentation bool
+}
+
+func (c *Config) GetJsModuleSystem() string {
+	if c.JsModuleSystem == "" {
+		return "es6"
+	}
+	return strings.ToLower(c.JsModuleSystem)
 }
 
 type SchemaListener struct {
@@ -143,6 +153,8 @@ func (l *SchemaListener) EnterConfigAttribute(ctx *parser.ConfigAttributeContext
 			l.Config.GoOutputDir = value
 		case "javascript_output_dir":
 			l.Config.JavascriptOutputDir = value
+		case "js_module_system":
+			l.Config.JsModuleSystem = value
 		case "typescript_output_dir":
 			l.Config.TypeScriptOutputDir = value
 		case "java_output_dir":
