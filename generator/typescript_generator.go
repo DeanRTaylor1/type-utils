@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/deanrtaylor1/type-utils/config"
+	"github.com/deanrtaylor1/type-utils/constants"
 	"github.com/deanrtaylor1/type-utils/listener"
 )
 
@@ -63,20 +64,16 @@ func (t *TypeScriptSchemaGenerator) GenerateFieldDefinition(fieldName string, fi
 
 func (t *TypeScriptSchemaGenerator) ConvertType(fieldType string) string {
 	switch fieldType {
-	case "string":
+	case constants.TypeString:
 		return "string"
-	case "int":
+	case constants.TypeInt, constants.TypeInt32, constants.TypeInt64, constants.TypeFloat, constants.TypeDouble:
 		return "number"
-	case "number":
-		return "number"
-	case "time":
-		return "Date"
-	case "float":
-		return "number"
-	case "boolean":
+	case constants.TypeBoolean:
 		return "boolean"
+	case constants.TypeDate, constants.TypeTime, constants.TypeDateTime, constants.TypeTimestamp:
+		return "Date"
 	default:
-		return getTypeForTS(fieldType) // For custom types, use the type name as is
+		return getTypeForTS(fieldType)
 	}
 }
 

@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/deanrtaylor1/type-utils/config"
+	"github.com/deanrtaylor1/type-utils/constants"
 	"github.com/deanrtaylor1/type-utils/listener"
 	"github.com/deanrtaylor1/type-utils/utils"
 )
@@ -152,20 +153,26 @@ func (j *JavaSchemaGenerator) generateClass(typeName string, schemaType *listene
 
 func (j *JavaSchemaGenerator) ConvertType(fieldType string) string {
 	switch fieldType {
-	case "string":
+	case constants.TypeString:
 		return "String"
-	case "int":
+	case constants.TypeInt, constants.TypeInt32:
 		return "Integer"
-	case "number":
-		return "Double"
-	case "float":
+	case constants.TypeInt64:
+		return "Long"
+	case constants.TypeFloat:
 		return "Float"
-	case "time":
-		return "LocalDateTime"
-	case "boolean":
+	case constants.TypeDouble:
+		return "Double"
+	case constants.TypeBoolean:
 		return "Boolean"
+	case constants.TypeDate:
+		return "LocalDate"
+	case constants.TypeTime:
+		return "LocalTime"
+	case constants.TypeDateTime, constants.TypeTimestamp:
+		return "LocalDateTime"
 	default:
-		return fieldType // For custom types, use the type name as is
+		return fieldType
 	}
 }
 

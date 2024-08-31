@@ -2,7 +2,7 @@ grammar HCLLikeDSL;
 
 file: hclconfig? block*;
 
-hclconfig: 'HCLCONFIG' '{' configAttribute* '}';
+hclconfig: 'Type_Config' '{' configAttribute* '}';
 
 configAttribute: IDENTIFIER '=' STRING;
 

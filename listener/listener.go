@@ -122,11 +122,11 @@ func NewSchemaListener() *SchemaListener {
 
 func (l *SchemaListener) EnterHclconfig(ctx *parser.HclconfigContext) {
 	l.currentType = &SchemaType{
-		Name:   "HCLCONFIG",
+		Name:   "Type_Config",
 		Fields: make(map[string]FieldType),
 		indent: 1,
 	}
-	l.Schema["HCLCONFIG"] = l.currentType
+	l.Schema["Type_Config"] = l.currentType
 }
 
 func (l *SchemaListener) ExitHclconfig(ctx *parser.HclconfigContext) {
@@ -134,10 +134,11 @@ func (l *SchemaListener) ExitHclconfig(ctx *parser.HclconfigContext) {
 }
 
 func (l *SchemaListener) EnterConfigAttribute(ctx *parser.ConfigAttributeContext) {
-	if l.currentType != nil && l.currentType.Name == "HCLCONFIG" {
+	if l.currentType != nil && l.currentType.Name == "Type_Config" {
 		key := ctx.IDENTIFIER().GetSymbol().GetText()
 		value := ctx.STRING().GetSymbol().GetText()
 		value = value[1 : len(value)-1] // Remove quotes
+		fmt.Printf("Key: %s, Value: %s\n", key, value)
 
 		l.currentType.Fields[key] = FieldType{Type: value, IsArray: false, IsCustom: false}
 

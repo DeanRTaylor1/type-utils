@@ -32,7 +32,7 @@ var HCLLikeDSLParserStaticData struct {
 func hcllikedslParserInit() {
 	staticData := &HCLLikeDSLParserStaticData
 	staticData.LiteralNames = []string{
-		"", "'HCLCONFIG'", "'{'", "'}'", "'='", "'repeated'", "'optional'",
+		"", "'Type_Config'", "'{'", "'}'", "'='", "'repeated'", "'optional'",
 		"'optional repeated'",
 	}
 	staticData.SymbolicNames = []string{

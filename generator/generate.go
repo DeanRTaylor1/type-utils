@@ -38,20 +38,36 @@ func getOutputDir(config *listener.Config, outputLang string) string {
 		if config.GoOutputDir != "" {
 			return config.GoOutputDir
 		}
+		fmt.Printf("No go_output_dir specified in config, please review your schemas. Aborting...\n")
+		os.Exit(1)
 	case "typescript", "ts":
 		if config.TypeScriptOutputDir != "" {
 			return config.TypeScriptOutputDir
+		} else {
+			fmt.Printf("No typescript_output_dir specified in config, please review your schemas. Aborting...\n")
+			os.Exit(1)
 		}
 	case "javascript", "js":
 		if config.JavascriptOutputDir != "" {
 			return config.JavascriptOutputDir
 		}
+		fmt.Printf("No javascript_output_dir specified in config, please review your schemas. Aborting...\n")
+		os.Exit(1)
 	case "java":
 		if config.JavaOutputDir != "" {
 			return config.JavaOutputDir
 		}
+		fmt.Printf("No java_output_dir specified in config, please review your schemas. Aborting...\n")
+		os.Exit(1)
+	case "swift":
+		if config.SwiftOutputDir != "" {
+			return config.SwiftOutputDir
+		}
+		fmt.Printf("No swift_output_dir specified in config, please review your schemas. Aborting...\n")
+		os.Exit(1)
 	default:
-		panic("unsupported output language")
+		fmt.Printf("unsupported output language, aborting...: %s\n", outputLang)
+		os.Exit(1)
 	}
 	return "unsupported"
 }
@@ -123,7 +139,7 @@ func gen(sg SchemaGenerator) error {
 	}
 
 	for typeName, schemaType := range sg.GetSchema() {
-		if typeName == "HCLCONFIG" {
+		if typeName == "Type_Config" {
 			continue
 		}
 		typedef, err := sg.GenerateTypeDefinition(typeName, schemaType)
@@ -171,6 +187,13 @@ func getGenerator(yamlConfig config.TypeUtilConfiger, config *listener.Config, f
 			file:             file,
 			schema:           schema,
 			listenerConfig:   config,
+			TypeUtilConfiger: yamlConfig,
+		}, nil
+	case "swift":
+		return &SwiftSchemaGenerator{
+			file:             file,
+			listenerConfig:   config,
+			schema:           schema,
 			TypeUtilConfiger: yamlConfig,
 		}, nil
 

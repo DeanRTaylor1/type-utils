@@ -85,6 +85,10 @@ func (yc *YamlConfiger) Read() Configer {
 		log.Fatalf("Failed to parse YAML: %v", err)
 	}
 
+	if config.GitRepo == nil {
+		config.GitRepo = &GitRepo{}
+	}
+
 	yc.config = config
 	return yc
 }

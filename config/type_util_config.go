@@ -14,7 +14,10 @@ func (gr *GitRepo) GetPath() string {
 }
 
 func (gr *GitRepo) CanFetch() bool {
-	return gr.URL != ""
+	if gr.GetUrl() != "" {
+		return true
+	}
+	return false
 }
 
 type GitRepoConfiger interface {

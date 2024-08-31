@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/deanrtaylor1/type-utils/config"
+	"github.com/deanrtaylor1/type-utils/constants"
 	"github.com/deanrtaylor1/type-utils/listener"
 )
 
@@ -75,16 +76,16 @@ func (j *JavaScriptSchemaGenerator) GenerateFieldDefinition(fieldName string, fi
 
 func (j *JavaScriptSchemaGenerator) ConvertType(fieldType string) string {
 	switch fieldType {
-	case "string":
+	case constants.TypeString:
 		return "string"
-	case "int", "number", "float":
+	case constants.TypeInt, constants.TypeInt32, constants.TypeInt64, constants.TypeFloat, constants.TypeDouble:
 		return "number"
-	case "time":
-		return "Date"
-	case "boolean":
+	case constants.TypeBoolean:
 		return "boolean"
+	case constants.TypeDate, constants.TypeTime, constants.TypeDateTime, constants.TypeTimestamp:
+		return "Date"
 	default:
-		return getTypeForJS(fieldType) // For custom types, use the type name as is
+		return getTypeForJS(fieldType)
 	}
 }
 

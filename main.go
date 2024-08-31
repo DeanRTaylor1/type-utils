@@ -41,7 +41,7 @@ func main() {
 		// Process local schemas
 		schemasDirName := configer.GetConfig().GetSchemasDirName()
 
-		filepath.Walk(schemasDirName, getFileWalkerCallback(schemas))
+		filepath.Walk(schemasDirName, getFileWalkerCallback(&schemas))
 	}
 
 	for _, v := range schemas {
@@ -66,7 +66,7 @@ func processHCLFile(filePath string) (*listener.SchemaListener, error) {
 	return listener, nil
 }
 
-func getFileWalkerCallback(schemas []*listener.SchemaListener) func(path string, info os.FileInfo, err error) error {
+func getFileWalkerCallback(schemas *[]*listener.SchemaListener) func(path string, info os.FileInfo, err error) error {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -76,7 +76,7 @@ func getFileWalkerCallback(schemas []*listener.SchemaListener) func(path string,
 			if err != nil {
 				return fmt.Errorf("error processing file %s: %v", path, err)
 			}
-			schemas = append(schemas, schemaConfig)
+			*schemas = append(*schemas, schemaConfig)
 		}
 		return nil
 	}

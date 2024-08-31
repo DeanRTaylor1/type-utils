@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/deanrtaylor1/type-utils/config"
+	"github.com/deanrtaylor1/type-utils/constants"
 	"github.com/deanrtaylor1/type-utils/listener"
 	"github.com/deanrtaylor1/type-utils/utils"
 )
@@ -88,20 +89,20 @@ func (g *GoSchemaGenerator) GenerateFieldDefinition(fieldName string, fieldType 
 
 func (g *GoSchemaGenerator) ConvertType(fieldType string) string {
 	switch fieldType {
-	case "string":
+	case constants.TypeString:
 		return "string"
-	case "int":
+	case constants.TypeInt, constants.TypeInt32:
 		return "int32"
-	case "number":
+	case constants.TypeInt64:
+		return "int64"
+	case constants.TypeFloat, constants.TypeDouble:
 		return "float64"
-	case "float":
-		return "float64"
-	case "time":
-		return "time.Time"
-	case "boolean":
+	case constants.TypeBoolean:
 		return "bool"
+	case constants.TypeDate, constants.TypeTime, constants.TypeDateTime, constants.TypeTimestamp:
+		return "time.Time"
 	default:
-		return fieldType // For custom types, use the type name as is
+		return fieldType
 	}
 }
 
